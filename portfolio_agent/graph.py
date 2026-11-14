@@ -15,15 +15,14 @@ import streamlit as st
 
 load_dotenv()
 
-if "OPENAI_API_KEY" in st.secrets['secrets']:
-    OPENAI_API_KEY = st.secrets['secrets']['OPENAI_API_KEY']
-else:
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+def get_secret(name):
+    try:
+        return st.secrets["secrets"][name]
+    except Exception:
+        return os.getenv(name)
 
-if "FINNHUB_API_KEY" in st.secrets['secrets']:
-    FINNHUB_API_KEY = st.secrets['secrets']['FINNHUB_API_KEY']
-else:
-    FINNHUB_API_KEY = os.getenv("FINNHUB_API_KEY")
+OPENAI_API_KEY = get_secret("OPENAI_API_KEY")
+FINNHUB_API_KEY = get_secret("FINNHUB_API_KEY")
         
 cache = InMemoryCache()
 

@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
-from portfolio_optimization_workflow import workflow, AgentState, UserProfile, PortfolioState, MarketSnapshot  
+from portfolio_agent.graph import workflow, AgentState, UserProfile, PortfolioState, MarketSnapshot
+PortfolioState, MarketSnapshot  
 import pandas_ta_classic as ta
 import warnings, os
 warnings.filterwarnings("ignore")
@@ -13,10 +14,13 @@ from langchain_community.cache import InMemoryCache
 
 load_dotenv()
 
-if "OPENAI_API_KEY" in st.secrets['secrets']:
-    OPENAI_API_KEY = st.secrets['secrets']['OPENAI_API_KEY']
-else:
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+def get_secret(name):
+    try:
+        return st.secrets["secrets"][name]
+    except Exception:
+        return os.getenv(name)
+
+OPENAI_API_KEY = get_secret("OPENAI_API_KEY")
 
 cache = InMemoryCache()
 
